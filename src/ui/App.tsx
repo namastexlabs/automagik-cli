@@ -34,6 +34,9 @@ import { StreamingProvider } from './contexts/StreamingContext.js';
 import { appConfig } from '../config/settings.js';
 import { localAPIClient } from '../config/localClient.js';
 import { detectAPIServer, generateStartupGuide } from '../utils/serverDetection.js';
+import { envManager } from '../utils/envManager.js';
+import { ServerConfigDialog } from './components/ServerConfigDialog.js';
+import { ConnectionStatus } from './components/ConnectionStatus.js';
 import ansiEscapes from 'ansi-escapes';
 
 const CTRL_EXIT_PROMPT_DURATION_MS = 1000;
@@ -84,12 +87,15 @@ const App = ({ version }: AppProps) => {
   const [shellModeActive, setShellModeActive] = useState<boolean>(false);
   
   // Target selection state
-  const [uiState, setUiState] = useState<'selecting_type' | 'selecting_target' | 'selecting_session' | 'chatting'>('selecting_type');
+  const [uiState, setUiState] = useState<'configuring_server' | 'selecting_type' | 'selecting_target' | 'selecting_session' | 'chatting'>('selecting_type');
   const [selectedTargetType, setSelectedTargetType] = useState<'agent' | 'team' | 'workflow' | null>(null);
   
   // API state
   const [showStartupBanner, setShowStartupBanner] = useState(true);
-  const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
+  const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'failed' | 'configured'>('connecting');
+  const [connectionError, setConnectionError] = useState<string>('');
+  const [retryCount, setRetryCount] = useState(0);
+  const [currentServerUrl, setCurrentServerUrl] = useState(appConfig.apiBaseUrl);
   const [selectedTarget, setSelectedTarget] = useState<{ type: 'agent' | 'team' | 'workflow'; id: string; name: string } | null>(null);
   const [availableTargets, setAvailableTargets] = useState<{
     agents: any[];
@@ -141,6 +147,30 @@ const App = ({ version }: AppProps) => {
     setUiState('chatting');
   }, [selectedTarget, createNewSession, loadSession, addMessage]);
 
+  // Server configuration handlers
+  const handleServerConfigSubmit = useCallback(async (url: string) => {
+    try {
+      setConnectionStatus('configured');
+      setCurrentServerUrl(url);
+      
+      // Update .env file
+      await envManager.updateEnvFile({ API_BASE_URL: url });
+      
+      // Update the local client configuration
+      localAPIClient.setBaseUrl(url);
+      
+      // Try to reconnect
+      await initializeAPIConnection(url);
+    } catch (error) {
+      setConnectionError(`Failed to save configuration: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setConnectionStatus('failed');
+    }
+  }, []);
+
+  const handleServerConfigCancel = useCallback(() => {
+    process.exit(0);
+  }, []);
+
   // Local API streaming
   const {
     streamingState,
@@ -180,58 +210,69 @@ const App = ({ version }: AppProps) => {
   }, []);
 
   // Initialize API connection
-  useEffect(() => {
-    const initializeAPI = async () => {
-      try {
-        // Add a small delay to ensure banner is visible
+  const initializeAPIConnection = useCallback(async (url: string, retry: number = 0) => {
+    try {
+      setConnectionStatus('connecting');
+      setRetryCount(retry);
+      
+      // Add a small delay to ensure banner is visible on first attempt
+      if (retry === 0) {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        const healthResponse = await localAPIClient.healthCheck();
-        if (healthResponse.error) {
-          throw new Error(healthResponse.error);
-        }
+      }
+      
+      const healthResponse = await localAPIClient.healthCheck();
+      if (healthResponse.error) {
+        throw new Error(healthResponse.error);
+      }
 
-        const [agentsResponse, teamsResponse, workflowsResponse] = await Promise.all([
-          localAPIClient.listAgents(),
-          localAPIClient.listTeams(),
-          localAPIClient.listWorkflows(),
-        ]);
+      const [agentsResponse, teamsResponse, workflowsResponse] = await Promise.all([
+        localAPIClient.listAgents(),
+        localAPIClient.listTeams(),
+        localAPIClient.listWorkflows(),
+      ]);
 
-        setAvailableTargets({
-          agents: agentsResponse.data || [],
-          teams: teamsResponse.data || [],
-          workflows: workflowsResponse.data || [],
-        });
+      setAvailableTargets({
+        agents: agentsResponse.data || [],
+        teams: teamsResponse.data || [],
+        workflows: workflowsResponse.data || [],
+      });
 
-        setConnectionStatus('connected');
-        
-        // Auto-select first agent for direct interface
-        if (agentsResponse.data && agentsResponse.data.length > 0) {
-          const firstAgent = agentsResponse.data[0];
-          setSelectedTarget({
-            type: 'agent',
-            id: firstAgent.agent_id,
-            name: firstAgent.name
-          });
-        }
-
-      } catch (error) {
-        setConnectionStatus('error');
-        
-        // Use graceful server detection
-        const serverStatus = await detectAPIServer(appConfig.apiBaseUrl);
-        const startupGuide = generateStartupGuide(serverStatus);
-        
-        addMessage({
-          type: MessageType.ERROR,
-          text: startupGuide,
-          timestamp: Date.now(),
+      setConnectionStatus('connected');
+      setConnectionError('');
+      setRetryCount(0);
+      
+      // Auto-select first agent for direct interface
+      if (agentsResponse.data && agentsResponse.data.length > 0) {
+        const firstAgent = agentsResponse.data[0];
+        setSelectedTarget({
+          type: 'agent',
+          id: firstAgent.agent_id,
+          name: firstAgent.name
         });
       }
-    };
 
-    initializeAPI();
-  }, [addMessage]);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      setConnectionError(errorMessage);
+      
+      // Retry up to 3 times
+      if (retry < 3) {
+        setTimeout(() => {
+          initializeAPIConnection(url, retry + 1);
+        }, 2000);
+      } else {
+        setConnectionStatus('failed');
+        // Show server configuration dialog after failed attempts
+        setTimeout(() => {
+          setUiState('configuring_server');
+        }, 1000);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    initializeAPIConnection(currentServerUrl);
+  }, [initializeAPIConnection, currentServerUrl]);
 
   const handleExit = useCallback(
     (
@@ -394,8 +435,8 @@ const App = ({ version }: AppProps) => {
     );
   }
 
-  // Show connection error
-  if (connectionStatus === 'error') {
+  // Show connection status during startup or server configuration
+  if (connectionStatus === 'connecting' || connectionStatus === 'failed' || uiState === 'configuring_server') {
     return (
       <Box flexDirection="column" marginBottom={1} width={layout.maxContentWidth}>
         <Static
@@ -412,48 +453,23 @@ const App = ({ version }: AppProps) => {
         >
           {() => null}
         </Static>
-        <Box marginTop={2}>
-          <Box
-            borderStyle="round"
-            borderColor={Colors.AccentRed}
-            paddingX={1}
-            marginY={1}
-          >
-            <Text color={Colors.AccentRed}>
-              Failed to connect to API at {appConfig.apiBaseUrl}
-            </Text>
-          </Box>
-        </Box>
+        <ConnectionStatus
+          status={connectionStatus}
+          url={currentServerUrl}
+          error={connectionError}
+          retryCount={retryCount}
+        />
+        {uiState === 'configuring_server' && (
+          <ServerConfigDialog
+            currentUrl={currentServerUrl}
+            onSubmit={handleServerConfigSubmit}
+            onCancel={handleServerConfigCancel}
+          />
+        )}
       </Box>
     );
   }
 
-  // Show loading while connecting
-  if (connectionStatus === 'connecting') {
-    return (
-      <Box flexDirection="column" marginBottom={1} width={layout.maxContentWidth}>
-        <Static
-          key={staticKey}
-          items={[
-            <Box flexDirection="column" key="header">
-              <Header
-                terminalWidth={layout.width}
-                version={version}
-                nightly={false}
-              />
-            </Box>,
-          ]}
-        >
-          {() => null}
-        </Static>
-        <Box marginTop={2}>
-          <Text>🔗 Connecting to {appConfig.apiBaseUrl}...</Text>
-        </Box>
-      </Box>
-    );
-  }
-
-  // Target selection UI
   if (uiState === 'selecting_type') {
     return (
       <Box flexDirection="column" marginBottom={1} width={layout.maxContentWidth}>

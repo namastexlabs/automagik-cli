@@ -55,6 +55,11 @@ export class LocalAPIClient {
     this.retryAttempts = appConfig.apiRetryAttempts;
   }
 
+  // Update base URL for server configuration
+  setBaseUrl(url: string): void {
+    this.baseUrl = url;
+  }
+
   private async makeRequest<T>(
     endpoint: string,
     options: Partial<GaxiosOptions> = {}
