@@ -68,17 +68,15 @@ nano .env
 
 ## Configuration
 
-All configuration is done via environment variables in the `.env` file:
+All configuration is done via environment variables in the `.env` file. Note that `API_BASE_URL` is required and must be set:
 
 ```bash
 # API Server Configuration
 API_BASE_URL=http://localhost:9888
-API_TIMEOUT=10000
+API_TIMEOUT=30000
 API_RETRY_ATTEMPTS=3
 
 # CLI Configuration
-CLI_NAME=automagik-cli
-CLI_VERSION=0.1.0
 CLI_DEBUG=false
 
 # Session Configuration
@@ -89,11 +87,11 @@ SESSION_AUTO_SAVE=true
 # Display Configuration
 ENABLE_COLORS=true
 ENABLE_SPINNER=true
-MAX_DISPLAY_WIDTH=120
+MAX_DISPLAY_WIDTH=200
 
 # Development Configuration
-LOG_LEVEL=info
-DISABLE_UPDATE_CHECK=false
+NODE_ENV=production
+LOG_LEVEL=error
 ```
 
 ## Usage

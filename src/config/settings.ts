@@ -9,10 +9,7 @@ export interface AppConfig {
   apiTimeout: number;
   apiRetryAttempts: number;
   
-  
   // CLI Configuration
-  cliName: string;
-  cliVersion: string;
   cliDebug: boolean;
   
   // Session Configuration
@@ -28,7 +25,6 @@ export interface AppConfig {
   // Development Configuration
   nodeEnv: string;
   logLevel: string;
-  disableUpdateCheck: boolean;
 }
 
 function getEnvString(key: string, defaultValue: string): string {
@@ -47,13 +43,11 @@ function getEnvBoolean(key: string, defaultValue: boolean): boolean {
 
 export const appConfig: AppConfig = {
   // API Configuration
-  apiBaseUrl: getEnvString('API_BASE_URL', 'http://localhost:9888'),
-  apiTimeout: getEnvNumber('API_TIMEOUT', 10000), // Reduced from 30s to 10s
+  apiBaseUrl: getEnvString('API_BASE_URL', ''), // No default - must be provided
+  apiTimeout: getEnvNumber('API_TIMEOUT', 30000), // Increased to 30 seconds
   apiRetryAttempts: getEnvNumber('API_RETRY_ATTEMPTS', 3),
   
   // CLI Configuration
-  cliName: getEnvString('CLI_NAME', 'automagik-cli'),
-  cliVersion: getEnvString('CLI_VERSION', '0.1.0'),
   cliDebug: getEnvBoolean('CLI_DEBUG', false),
   
   // Session Configuration
@@ -64,12 +58,11 @@ export const appConfig: AppConfig = {
   // Display Configuration
   enableColors: getEnvBoolean('ENABLE_COLORS', true),
   enableSpinner: getEnvBoolean('ENABLE_SPINNER', true),
-  maxDisplayWidth: getEnvNumber('MAX_DISPLAY_WIDTH', 120),
+  maxDisplayWidth: getEnvNumber('MAX_DISPLAY_WIDTH', 200),
   
   // Development Configuration
-  nodeEnv: getEnvString('NODE_ENV', 'development'),
-  logLevel: getEnvString('LOG_LEVEL', 'info'),
-  disableUpdateCheck: getEnvBoolean('DISABLE_UPDATE_CHECK', false),
+  nodeEnv: getEnvString('NODE_ENV', 'production'),
+  logLevel: getEnvString('LOG_LEVEL', 'error'),
 };
 
 export default appConfig;

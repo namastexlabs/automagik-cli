@@ -6,8 +6,6 @@ export interface EnvConfig {
   API_BASE_URL?: string;
   API_TIMEOUT?: string;
   API_RETRY_ATTEMPTS?: string;
-  CLI_NAME?: string;
-  CLI_VERSION?: string;
   CLI_DEBUG?: string;
   SESSION_DIR?: string;
   SESSION_MAX_HISTORY?: string;
@@ -17,7 +15,6 @@ export interface EnvConfig {
   MAX_DISPLAY_WIDTH?: string;
   NODE_ENV?: string;
   LOG_LEVEL?: string;
-  DISABLE_UPDATE_CHECK?: string;
   NPM_TOKEN?: string;
 }
 
@@ -53,13 +50,11 @@ export class EnvManager {
   async writeEnvFile(config: EnvConfig): Promise<void> {
     const lines = [
       '# API Server Configuration',
-      `API_BASE_URL=${config.API_BASE_URL || 'http://localhost:9888'}`,
-      `API_TIMEOUT=${config.API_TIMEOUT || '10000'}`,
+      `API_BASE_URL=${config.API_BASE_URL || ''}`,
+      `API_TIMEOUT=${config.API_TIMEOUT || '30000'}`,
       `API_RETRY_ATTEMPTS=${config.API_RETRY_ATTEMPTS || '3'}`,
       '',
       '# CLI Configuration',
-      `CLI_NAME=${config.CLI_NAME || 'automagik-cli'}`,
-      `CLI_VERSION=${config.CLI_VERSION || '0.1.1'}`,
       `CLI_DEBUG=${config.CLI_DEBUG || 'false'}`,
       '',
       '# Session Configuration',
@@ -70,12 +65,11 @@ export class EnvManager {
       '# Display Configuration',
       `ENABLE_COLORS=${config.ENABLE_COLORS || 'true'}`,
       `ENABLE_SPINNER=${config.ENABLE_SPINNER || 'true'}`,
-      `MAX_DISPLAY_WIDTH=${config.MAX_DISPLAY_WIDTH || '120'}`,
+      `MAX_DISPLAY_WIDTH=${config.MAX_DISPLAY_WIDTH || '200'}`,
       '',
       '# Development Configuration',
       `NODE_ENV=${config.NODE_ENV || 'production'}`,
-      `LOG_LEVEL=${config.LOG_LEVEL || 'info'}`,
-      `DISABLE_UPDATE_CHECK=${config.DISABLE_UPDATE_CHECK || 'false'}`,
+      `LOG_LEVEL=${config.LOG_LEVEL || 'error'}`,
     ];
 
     if (config.NPM_TOKEN) {

@@ -5,9 +5,17 @@ import { appConfig } from './config/settings.js';
 import { runHeadless, formatHeadlessOutput } from './headless.js';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
+import { readPackageUp } from 'read-package-up';
 
-// Version from package.json
-const version = '0.1.0';
+// Get version from package.json
+const getVersion = async (): Promise<string> => {
+  try {
+    const result = await readPackageUp();
+    return result?.packageJson?.version || '0.1.0';
+  } catch {
+    return '0.1.0';
+  }
+};
 
 // Parse CLI arguments
 const argv = yargs(hideBin(process.argv))
@@ -37,6 +45,9 @@ const argv = yargs(hideBin(process.argv))
   .argv as any;
 
 const main = async () => {
+  // Get version from package.json
+  const version = await getVersion();
+  
   // Check if running in headless mode
   if (argv.prompt && argv.target) {
     // Headless mode execution
