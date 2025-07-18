@@ -11,6 +11,7 @@ import { cpSlice, cpLen } from '../utils/textUtils.js';
 import chalk from 'chalk';
 import stringWidth from 'string-width';
 import { useKeypress, Key } from '../hooks/useKeypress.js';
+import { useResponsiveLayout } from '../hooks/useResponsiveLayout.js';
 
 export interface InputPromptProps {
   buffer: TextBuffer;
@@ -37,7 +38,11 @@ export const InputPrompt: React.FC<InputPromptProps> = ({
   placeholder = '  Type your message or @path/to/file',
   focus = true,
 }) => {
+  const layout = useResponsiveLayout();
   const [justNavigatedHistory, setJustNavigatedHistory] = useState(false);
+  
+  // Use responsive input width, fallback to prop for backwards compatibility
+  const responsiveInputWidth = layout.inputWidth || inputWidth;
 
   const handleSubmitAndClear = useCallback(
     (submittedValue: string) => {
@@ -203,12 +208,18 @@ export const InputPrompt: React.FC<InputPromptProps> = ({
     buffer.visualCursor;
   const scrollVisualRow = buffer.visualScrollRow;
 
+  // Responsive placeholder text
+  const responsivePlaceholder = layout.isSmall 
+    ? 'Type your message...'
+    : placeholder;
+
   return (
     <>
       <Box
-        borderStyle="round"
+        borderStyle={layout.isSmall ? "single" : "round"}
         borderColor={shellModeActive ? Colors.AccentYellow : Colors.AccentPurple}
-        paddingX={1}
+        paddingX={layout.isSmall ? 0 : 1}
+        width={Math.min(responsiveInputWidth + 4, layout.maxContentWidth)}
       >
         <Text
           color={shellModeActive ? Colors.AccentYellow : Colors.AccentPurple}
@@ -216,22 +227,22 @@ export const InputPrompt: React.FC<InputPromptProps> = ({
           {shellModeActive ? '! ' : '> '}
         </Text>
         <Box flexGrow={1} flexDirection="column">
-          {buffer.text.length === 0 && placeholder ? (
+          {buffer.text.length === 0 && responsivePlaceholder ? (
             focus ? (
               <Text>
-                {chalk.inverse(placeholder.slice(0, 1))}
-                <Text color={Colors.Gray}>{placeholder.slice(1)}</Text>
+                {chalk.inverse(responsivePlaceholder.slice(0, 1))}
+                <Text color={Colors.Gray}>{responsivePlaceholder.slice(1)}</Text>
               </Text>
             ) : (
-              <Text color={Colors.Gray}>{placeholder}</Text>
+              <Text color={Colors.Gray}>{responsivePlaceholder}</Text>
             )
           ) : (
             linesToRender.map((lineText, visualIdxInRenderedSet) => {
               const cursorVisualRow = cursorVisualRowAbsolute - scrollVisualRow;
-              let display = cpSlice(lineText, 0, inputWidth);
+              let display = cpSlice(lineText, 0, responsiveInputWidth);
               const currentVisualWidth = stringWidth(display);
-              if (currentVisualWidth < inputWidth) {
-                display = display + ' '.repeat(inputWidth - currentVisualWidth);
+              if (currentVisualWidth < responsiveInputWidth) {
+                display = display + ' '.repeat(responsiveInputWidth - currentVisualWidth);
               }
 
               if (visualIdxInRenderedSet === cursorVisualRow) {
@@ -252,7 +263,7 @@ export const InputPrompt: React.FC<InputPromptProps> = ({
                       cpSlice(display, relativeVisualColForHighlight + 1);
                   } else if (
                     relativeVisualColForHighlight === cpLen(display) &&
-                    cpLen(display) === inputWidth
+                    cpLen(display) === responsiveInputWidth
                   ) {
                     display = display + chalk.inverse(' ');
                   }

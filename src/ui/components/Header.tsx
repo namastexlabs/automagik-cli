@@ -10,6 +10,7 @@ import Gradient from 'ink-gradient';
 import { Colors } from '../colors.js';
 import { shortGenieAsciiLogo, longGenieAsciiLogo } from './AsciiArt.js';
 import { getAsciiArtWidth } from '../utils/textUtils.js';
+import { useResponsiveLayout, useResponsiveText } from '../hooks/useResponsiveLayout.js';
 
 interface HeaderProps {
   customAsciiArt?: string; // For user-defined ASCII art
@@ -24,23 +25,40 @@ export const Header: React.FC<HeaderProps> = ({
   version,
   nightly,
 }) => {
+  const layout = useResponsiveLayout();
+  
   let displayTitle;
+  let displayVersion = version;
   const widthOfLongLogo = getAsciiArtWidth(longGenieAsciiLogo);
 
   if (customAsciiArt) {
     displayTitle = customAsciiArt;
   } else {
-    displayTitle =
-      terminalWidth >= widthOfLongLogo ? longGenieAsciiLogo : shortGenieAsciiLogo;
+    // Enhanced responsive logo selection
+    if (layout.isSmall || terminalWidth < widthOfLongLogo) {
+      displayTitle = shortGenieAsciiLogo;
+    } else {
+      displayTitle = longGenieAsciiLogo;
+    }
+  }
+
+  // Responsive version display
+  if (nightly) {
+    if (layout.isSmall) {
+      displayVersion = useResponsiveText(`v${version}`, Math.max(terminalWidth - 10, 5));
+    }
   }
 
   const artWidth = getAsciiArtWidth(displayTitle);
+  
+  // Responsive height based on terminal size
+  const headerMargin = layout.isShort ? 0 : 1;
 
   return (
     <Box
-      marginBottom={1}
+      marginBottom={headerMargin}
       alignItems="flex-start"
-      width={artWidth}
+      width={Math.min(artWidth, layout.maxContentWidth)}
       flexShrink={0}
       flexDirection="column"
     >
@@ -52,9 +70,14 @@ export const Header: React.FC<HeaderProps> = ({
         <Text>{displayTitle}</Text>
       )}
       {nightly && (
-        <Box width="100%" flexDirection="row" justifyContent="flex-end">
+        <Box 
+          width="100%" 
+          flexDirection="row" 
+          justifyContent={layout.isSmall ? "flex-start" : "flex-end"}
+          marginTop={layout.isShort ? 0 : undefined}
+        >
           <Gradient colors={Colors.GradientColors}>
-            <Text>v{version}</Text>
+            <Text>v{displayVersion}</Text>
           </Gradient>
         </Box>
       )}

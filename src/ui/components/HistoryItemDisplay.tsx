@@ -7,6 +7,7 @@ import { Box, Text } from 'ink';
 import { Colors } from '../colors.js';
 import { HistoryItem, MessageType } from '../types.js';
 import { MarkdownText } from './MarkdownText.js';
+import { useResponsiveLayout, useResponsiveText } from '../hooks/useResponsiveLayout.js';
 
 interface HistoryItemDisplayProps {
   item: HistoryItem;
@@ -23,6 +24,7 @@ export const HistoryItemDisplay: React.FC<HistoryItemDisplayProps> = ({
   terminalWidth,
   availableTerminalHeight,
 }) => {
+  const layout = useResponsiveLayout();
   const getMessageColor = (type: MessageType): string => {
     switch (type) {
       case MessageType.USER:
@@ -176,11 +178,13 @@ export const HistoryItemDisplay: React.FC<HistoryItemDisplayProps> = ({
           {item.metadata?.tool && (
             <Box marginTop={1} flexDirection="column">
               {item.metadata.tool.tool_call_id && (
-                <Box marginBottom={1} flexDirection="row">
-                  <Box minWidth={15}>
+                <Box marginBottom={layout.isShort ? 0 : 1} flexDirection={layout.isSmall ? "column" : "row"}>
+                  <Box minWidth={layout.isSmall ? 0 : 15}>
                     <Text color={Colors.AccentCyan} bold>Tool Call ID:</Text>
                   </Box>
-                  <Text color={Colors.Gray}>{item.metadata.tool.tool_call_id}</Text>
+                  <Text color={Colors.Gray}>
+                    {useResponsiveText(item.metadata.tool.tool_call_id, layout.maxContentWidth - 20)}
+                  </Text>
                 </Box>
               )}
               {item.metadata.tool.agent_id && (
@@ -445,12 +449,17 @@ export const HistoryItemDisplay: React.FC<HistoryItemDisplayProps> = ({
     );
   };
 
-  const maxWidth = Math.floor(terminalWidth * 0.9);
+  // Responsive width calculation
+  const maxWidth = Math.min(layout.maxContentWidth, Math.floor(terminalWidth * 0.9));
+  
+  // Responsive margins and spacing
+  const marginBottom = layout.isShort ? 0 : 1;
+  const contentPadding = layout.isSmall ? 1 : 2;
 
   return (
     <Box
       flexDirection="column"
-      marginBottom={1}
+      marginBottom={marginBottom}
       width={maxWidth}
       minHeight={availableTerminalHeight ? 1 : undefined}
     >
@@ -477,7 +486,7 @@ export const HistoryItemDisplay: React.FC<HistoryItemDisplayProps> = ({
 
       {/* Message content */}
       <Box 
-        marginLeft={2}
+        marginLeft={contentPadding}
         flexDirection="column"
         width="100%"
       >
@@ -487,14 +496,14 @@ export const HistoryItemDisplay: React.FC<HistoryItemDisplayProps> = ({
       {/* Error details for error messages */}
       {item.type === MessageType.ERROR && item.details && (
         <Box 
-          marginLeft={2} 
-          marginTop={1}
+          marginLeft={contentPadding} 
+          marginTop={layout.isShort ? 0 : 1}
           borderStyle="round"
           borderColor={Colors.AccentRed}
           paddingX={1}
         >
           <Text color={Colors.Gray} italic>
-            {item.details}
+            {useResponsiveText(item.details, layout.maxContentWidth - 10)}
           </Text>
         </Box>
       )}

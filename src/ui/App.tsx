@@ -16,6 +16,7 @@ import {
 } from 'ink';
 import { StreamingState, type HistoryItem, MessageType } from './types.js';
 import { useTerminalSize } from './hooks/useTerminalSize.js';
+import { useResponsiveLayout } from './hooks/useResponsiveLayout.js';
 import { useLocalAPIStream } from './hooks/useLocalAPIStream.js';
 import { useLoadingIndicator } from './hooks/useLoadingIndicator.js';
 import { Header } from './components/Header.js';
@@ -55,6 +56,7 @@ const App = ({ version }: AppProps) => {
   const { stdout } = useStdout();
   const { stdin, setRawMode } = useStdin();
   const { rows: terminalHeight, columns: terminalWidth } = useTerminalSize();
+  const layout = useResponsiveLayout();
   
   // Session and history management
   const {
@@ -155,10 +157,9 @@ const App = ({ version }: AppProps) => {
 
   const { elapsedTime, currentLoadingPhrase } = useLoadingIndicator(streamingState);
 
-  // Text buffer setup
-  const widthFraction = 0.9;
-  const inputWidth = Math.max(20, Math.floor(terminalWidth * widthFraction) - 3);
-  const suggestionsWidth = Math.max(60, Math.floor(terminalWidth * 0.8));
+  // Text buffer setup - now using responsive layout
+  const inputWidth = layout.inputWidth;
+  const suggestionsWidth = Math.max(60, Math.floor(layout.width * 0.8));
 
   const buffer = useTextBuffer({
     initialText: '',
@@ -374,15 +375,15 @@ const App = ({ version }: AppProps) => {
     [terminalHeight, footerHeight],
   );
 
-  const mainAreaWidth = Math.floor(terminalWidth * 0.9);
-  const staticAreaMaxItemHeight = Math.max(terminalHeight * 4, 100);
+  const mainAreaWidth = layout.maxContentWidth;
+  const staticAreaMaxItemHeight = Math.max(layout.height * 4, 100);
 
   // Show startup banner first
   if (showStartupBanner) {
     return (
-      <Box flexDirection="column" marginBottom={1} width="90%">
+      <Box flexDirection="column" marginBottom={1} width={layout.maxContentWidth}>
         <Header
-          terminalWidth={terminalWidth}
+          terminalWidth={layout.width}
           version={version}
           nightly={false}
         />
@@ -396,13 +397,13 @@ const App = ({ version }: AppProps) => {
   // Show connection error
   if (connectionStatus === 'error') {
     return (
-      <Box flexDirection="column" marginBottom={1} width="90%">
+      <Box flexDirection="column" marginBottom={1} width={layout.maxContentWidth}>
         <Static
           key={staticKey}
           items={[
             <Box flexDirection="column" key="header">
               <Header
-                terminalWidth={terminalWidth}
+                terminalWidth={layout.width}
                 version={version}
                 nightly={false}
               />
@@ -430,13 +431,13 @@ const App = ({ version }: AppProps) => {
   // Show loading while connecting
   if (connectionStatus === 'connecting') {
     return (
-      <Box flexDirection="column" marginBottom={1} width="90%">
+      <Box flexDirection="column" marginBottom={1} width={layout.maxContentWidth}>
         <Static
           key={staticKey}
           items={[
             <Box flexDirection="column" key="header">
               <Header
-                terminalWidth={terminalWidth}
+                terminalWidth={layout.width}
                 version={version}
                 nightly={false}
               />
@@ -455,13 +456,13 @@ const App = ({ version }: AppProps) => {
   // Target selection UI
   if (uiState === 'selecting_type') {
     return (
-      <Box flexDirection="column" marginBottom={1} width="90%">
+      <Box flexDirection="column" marginBottom={1} width={layout.maxContentWidth}>
         <Static
           key={staticKey}
           items={[
             <Box flexDirection="column" key="header">
               <Header
-                terminalWidth={terminalWidth}
+                terminalWidth={layout.width}
                 version={version}
                 nightly={false}
               />
@@ -486,13 +487,13 @@ const App = ({ version }: AppProps) => {
         : availableTargets.workflows;
 
     return (
-      <Box flexDirection="column" marginBottom={1} width="90%">
+      <Box flexDirection="column" marginBottom={1} width={layout.maxContentWidth}>
         <Static
           key={staticKey}
           items={[
             <Box flexDirection="column" key="header">
               <Header
-                terminalWidth={terminalWidth}
+                terminalWidth={layout.width}
                 version={version}
                 nightly={false}
               />
@@ -513,13 +514,13 @@ const App = ({ version }: AppProps) => {
 
   if (uiState === 'selecting_session' && selectedTarget) {
     return (
-      <Box flexDirection="column" marginBottom={1} width="90%">
+      <Box flexDirection="column" marginBottom={1} width={layout.maxContentWidth}>
         <Static
           key={staticKey}
           items={[
             <Box flexDirection="column" key="header">
               <Header
-                terminalWidth={terminalWidth}
+                terminalWidth={layout.width}
                 version={version}
                 nightly={false}
               />
@@ -538,13 +539,13 @@ const App = ({ version }: AppProps) => {
   }
 
   return (
-    <Box flexDirection="column" marginBottom={1} width="90%">
+    <Box flexDirection="column" marginBottom={1} width={layout.maxContentWidth}>
       <Static
         key={staticKey}
         items={[
           <Box flexDirection="column" key="header">
             <Header
-              terminalWidth={terminalWidth}
+              terminalWidth={layout.width}
               version={version}
               nightly={false}
             />
