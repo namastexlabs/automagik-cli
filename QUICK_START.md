@@ -4,7 +4,7 @@
 
 ### 1. Install & Configure
 ```bash
-cd /home/namastex/workspace/genie-agents/chat/genie-local-cli
+cd /home/namastex/workspace/automagik-agents/chat/automagik-local-cli
 npm install
 cp .env.example .env
 ```
@@ -19,7 +19,7 @@ npm run dev
 
 # Or production mode
 npm run build
-./bundle/genie-cli.js
+./bundle/automagik-cli.js
 ```
 
 ## 🎯 Basic Usage
@@ -35,7 +35,7 @@ Edit `.env` to change settings:
 ```bash
 API_BASE_URL=http://localhost:9888  # Your API server
 CLI_DEBUG=true                      # Enable debug mode
-SESSION_DIR=~/.genie-cli/sessions   # Session storage
+SESSION_DIR=~/.automagik-cli/sessions   # Session storage
 ```
 
 ## 🎨 Features
@@ -49,10 +49,10 @@ SESSION_DIR=~/.genie-cli/sessions   # Session storage
 ## 📁 Project Structure
 
 ```
-chat/genie-local-cli/
+chat/automagik-local-cli/
 ├── .env                    # Your configuration
 ├── src/                    # Source code
-├── bundle/genie-cli.js     # Built executable  
+├── bundle/automagik-cli.js     # Built executable  
 └── README.md              # Full documentation
 ```
 

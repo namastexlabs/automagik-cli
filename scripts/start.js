@@ -12,7 +12,7 @@ const rootDir = resolve(__dirname, '..');
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 if (isDevelopment) {
-  console.log('🚀 Starting Genie Local CLI in development mode...');
+  console.log('🚀 Starting Automagik Local CLI in development mode...');
   
   // In development, run with ts-node for hot reloading
   const tsNodeProcess = spawn('npx', ['tsx', 'src/index.ts'], {
@@ -34,10 +34,10 @@ if (isDevelopment) {
     process.exit(1);
   });
 } else {
-  console.log('🚀 Starting Genie Local CLI in production mode...');
+  console.log('🚀 Starting Automagik Local CLI in production mode...');
   
   // In production, run the built bundle
-  const bundlePath = resolve(rootDir, 'bundle/genie-cli.js');
+  const bundlePath = resolve(rootDir, 'bundle/automagik-cli.js');
   
   if (!existsSync(bundlePath)) {
     console.error('❌ Bundle not found. Please run "npm run build" first.');

@@ -53,7 +53,7 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Title and version */}
       <Box justifyContent="space-between" width={terminalWidth}>
         <Box>
-          <Text bold color="blue">🧞 Genie Local CLI</Text>
+          <Text bold color="blue">🧞 Automagik Local CLI</Text>
           <Text color="gray"> v{version}</Text>
         </Box>
         <Text color={getConnectionStatusColor()}>

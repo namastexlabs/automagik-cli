@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const rootDir = resolve(__dirname, '..');
 
-console.log('🔨 Building Genie Local CLI...');
+console.log('🔨 Building Automagik Local CLI...');
 
 // Ensure bundle directory exists
 const bundleDir = resolve(rootDir, 'bundle');
@@ -48,7 +48,7 @@ tscProcess.on('close', (code) => {
     }
 
     // Make bundle executable
-    const bundlePath = resolve(bundleDir, 'genie-cli.js');
+    const bundlePath = resolve(bundleDir, 'automagik-cli.js');
     if (existsSync(bundlePath)) {
       chmodSync(bundlePath, '755');
       console.log('✅ Bundle created and made executable');

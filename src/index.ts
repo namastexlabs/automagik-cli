@@ -56,7 +56,7 @@ const main = async () => {
   // Interactive mode
   // Display startup info in debug mode
   if (appConfig.cliDebug) {
-    console.log('🎯 Genie Local CLI starting...');
+    console.log('🎯 Automagik Local CLI starting...');
     console.log(`API Base URL: ${appConfig.apiBaseUrl}`);
     console.log(`Session Directory: ${appConfig.sessionDir}`);
     console.log(`Debug Mode: ${appConfig.cliDebug}`);
@@ -69,7 +69,7 @@ const main = async () => {
   // Handle graceful shutdown
   const cleanup = () => {
     if (appConfig.cliDebug) {
-      console.log('\\n🎯 Genie Local CLI shutting down...');
+      console.log('\\n🎯 Automagik Local CLI shutting down...');
     }
     unmount();
     process.exit(0);
@@ -94,6 +94,6 @@ process.on('uncaughtException', (error) => {
 
 // Start the application
 main().catch((error) => {
-  console.error('Failed to start Genie Local CLI:', error);
+  console.error('Failed to start Automagik Local CLI:', error);
   process.exit(1);
 });

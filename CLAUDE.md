@@ -1,8 +1,8 @@
-# Genie CLI - AI Assistant Context
+# Automagik CLI - AI Assistant Context
 
 ## Project Overview
 
-Genie CLI is a sophisticated TypeScript-based command-line interface for interacting with multi-agent AI systems. It provides both interactive terminal UI and headless execution modes for seamless integration with AI agents, teams, and workflows.
+Automagik CLI is a sophisticated TypeScript-based command-line interface for interacting with multi-agent AI systems. It provides both interactive terminal UI and headless execution modes for seamless integration with AI agents, teams, and workflows.
 
 ## Architecture
 
@@ -52,7 +52,7 @@ Environment-based configuration via `.env` files:
 # All settings are optional with sensible defaults
 API_BASE_URL=http://localhost:9888    # API server location
 API_TIMEOUT=10000                     # 10 second timeout
-SESSION_DIR=~/.genie-cli/sessions     # Session storage location
+SESSION_DIR=~/.automagik-cli/sessions     # Session storage location
 CLI_DEBUG=false                       # Debug logging
 ```
 
@@ -93,7 +93,7 @@ POST /playground/workflows/{id}/runs   # Execute workflow
 - **Type Safety**: Strict TypeScript with full type coverage
 
 ### Session Management
-- **Local Storage**: JSON files in `~/.genie-cli/sessions/`
+- **Local Storage**: JSON files in `~/.automagik-cli/sessions/`
 - **Auto-save**: Configurable automatic session persistence
 - **Session Format**: Structured JSON with metadata, message history, timestamps
 
@@ -107,7 +107,7 @@ POST /playground/workflows/{id}/runs   # Execute workflow
 
 ### Headless Mode
 ```bash
-genie-cli --prompt "message" --target "id" [--session "id"] [--output format]
+automagik-cli --prompt "message" --target "id" [--session "id"] [--output format]
 ```
 
 ### Common Tasks
@@ -157,7 +157,7 @@ All environment variables have sensible defaults and are optional:
 ### Debugging Issues
 1. Enable debug mode: `CLI_DEBUG=true pnpm run dev`
 2. Check API server connectivity and endpoints
-3. Verify session file integrity in `~/.genie-cli/sessions/`
+3. Verify session file integrity in `~/.automagik-cli/sessions/`
 4. Use TypeScript compiler for type-related issues
 
 ### API Integration Changes

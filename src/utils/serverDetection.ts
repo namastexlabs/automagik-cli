@@ -35,11 +35,11 @@ export function generateStartupGuide(serverStatus: ServerStatus): string {
   }
 
   const guide = `
-🚀 **Starting Genie API Server**
+🚀 **Starting Automagik API Server**
 
-📂 **Step 1:** Navigate to genie-agents directory
+📂 **Step 1:** Navigate to automagik-agents directory
 \`\`\`bash
-cd /path/to/genie-agents
+cd /path/to/automagik-agents
 \`\`\`
 
 ⚡ **Step 2:** Start the server
@@ -52,7 +52,7 @@ Look for: "Sistema operacional" message
 
 🔄 **Step 4:** Restart this CLI
 \`\`\`bash
-./bundle/genie-cli.js
+./bundle/automagik-cli.js
 \`\`\`
 
 🔧 **Alternative methods:**

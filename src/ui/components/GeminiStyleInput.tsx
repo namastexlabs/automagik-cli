@@ -1,6 +1,6 @@
 /**
  * Gemini-style input component that combines gemini's visual design
- * with our working genie backend functionality
+ * with our working automagik backend functionality
  */
 
 import React, { useState, useCallback, useEffect } from 'react';

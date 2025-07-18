@@ -1,6 +1,6 @@
 /**
  * Gemini-style App that uses the visual structure from gemini-cli
- * but connects to genie's backend (agents, teams, workflows)
+ * but connects to automagik's backend (agents, teams, workflows)
  */
 
 import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
@@ -58,7 +58,7 @@ const GeminiApp = ({ version }: GeminiAppProps) => {
     currentSessionId,
   } = useSession();
 
-  // UI state for genie's flow
+  // UI state for automagik's flow
   const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
   const [selectedTarget, setSelectedTarget] = useState<{ type: 'agent' | 'team' | 'workflow'; id: string; name: string } | null>(null);
   const [availableTargets, setAvailableTargets] = useState<{
@@ -334,7 +334,7 @@ const GeminiApp = ({ version }: GeminiAppProps) => {
         justifyContent="space-between"
       >
         <Box>
-          <Text bold color="cyan">🎯 Genie Local CLI</Text>
+          <Text bold color="cyan">🎯 Automagik Local CLI</Text>
           <Text color="gray"> v{version}</Text>
         </Box>
         <Text color={Colors.AccentCyan}>● Connected</Text>

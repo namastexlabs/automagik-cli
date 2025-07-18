@@ -1,4 +1,4 @@
-# Genie CLI
+# Automagik CLI
 
 A powerful TypeScript-based CLI chat application for interacting with multi-agent AI systems. Built with React and designed for seamless integration with local and remote APIs.
 
@@ -10,8 +10,8 @@ npm install -g pnpm    # Install pnpm package manager
 # Ensure Node.js >= 20 and API server running at localhost:9888
 
 # 2. Installation
-git clone https://github.com/namastexlabs/genie-cli.git
-cd genie-cli
+git clone https://github.com/namastexlabs/automagik-cli.git
+cd automagik-cli
 pnpm install
 
 # 3. Start interactive mode
@@ -19,7 +19,7 @@ pnpm run dev
 
 # 4. Or use headless mode
 pnpm run build
-./bundle/genie-cli.js --prompt "Hello" --target "your-agent-id"
+./bundle/automagik-cli.js --prompt "Hello" --target "your-agent-id"
 ```
 
 ## Features
@@ -39,10 +39,22 @@ pnpm run build
 
 ## Installation
 
+### Option 1: Install from npm (Recommended)
+
+```bash
+# Install globally
+npm install -g automagik-cli
+
+# Use directly with npx
+npx automagik-cli --prompt "Hello" --target "agent-id"
+```
+
+### Option 2: Development Installation
+
 ```bash
 # Clone the repository
-git clone https://github.com/namastexlabs/genie-cli.git
-cd genie-cli
+git clone https://github.com/namastexlabs/automagik-cli.git
+cd automagik-cli
 
 # Install dependencies
 pnpm install
@@ -65,12 +77,12 @@ API_TIMEOUT=10000
 API_RETRY_ATTEMPTS=3
 
 # CLI Configuration
-CLI_NAME=genie-cli
+CLI_NAME=automagik-cli
 CLI_VERSION=0.1.0
 CLI_DEBUG=false
 
 # Session Configuration
-SESSION_DIR=~/.genie-cli/sessions
+SESSION_DIR=~/.automagik-cli/sessions
 SESSION_MAX_HISTORY=100
 SESSION_AUTO_SAVE=true
 
@@ -86,7 +98,7 @@ DISABLE_UPDATE_CHECK=false
 
 ## Usage
 
-The Genie CLI provides two modes of operation:
+The Automagik CLI provides two modes of operation:
 
 ### Interactive Mode (Default)
 
@@ -112,7 +124,7 @@ pnpm run build
 NODE_ENV=production pnpm run start
 
 # Or run the bundle directly
-./bundle/genie-cli.js
+./bundle/automagik-cli.js
 ```
 
 ### Headless Mode (CLI)
@@ -123,13 +135,13 @@ For automation, scripting, and non-interactive usage, the CLI supports headless 
 
 ```bash
 # Direct execution with prompt
-genie-cli --prompt "Hello, how are you?" --target "agent-id"
+automagik-cli --prompt "Hello, how are you?" --target "agent-id"
 
 # Specify output format
-genie-cli --prompt "Generate a report" --target "team-id" --output json
+automagik-cli --prompt "Generate a report" --target "team-id" --output json
 
 # Continue existing session
-genie-cli --prompt "Follow up question" --target "agent-id" --session "session-123"
+automagik-cli --prompt "Follow up question" --target "agent-id" --session "session-123"
 ```
 
 #### Command Reference
@@ -145,16 +157,16 @@ genie-cli --prompt "Follow up question" --target "agent-id" --session "session-1
 
 ```bash
 # Chat with an agent
-genie-cli --prompt "Explain quantum computing" --target "science-agent"
+automagik-cli --prompt "Explain quantum computing" --target "science-agent"
 
 # Execute a workflow with JSON output
-genie-cli --prompt "Process user data" --target "data-workflow" --output json
+automagik-cli --prompt "Process user data" --target "data-workflow" --output json
 
 # Continue a conversation
-genie-cli --prompt "Can you elaborate?" --target "assistant" --session "conv-456"
+automagik-cli --prompt "Can you elaborate?" --target "assistant" --session "conv-456"
 
 # Use in scripts
-RESULT=$(genie-cli --prompt "Analyze logs" --target "dev-team" --output json)
+RESULT=$(automagik-cli --prompt "Analyze logs" --target "dev-team" --output json)
 echo $RESULT | jq '.data'
 ```
 
@@ -165,12 +177,12 @@ echo $RESULT | jq '.data'
 pnpm run dev           # Start in development mode with hot reload
 pnpm run start         # Start in production mode
 pnpm run build         # Build for production
-./bundle/genie-cli.js  # Run built executable
+./bundle/automagik-cli.js  # Run built executable
 ```
 
 ### Headless Mode Options
 ```bash
-genie-cli [OPTIONS]
+automagik-cli [OPTIONS]
 
 Required:
   --prompt <message>     Message to send to the target
@@ -197,7 +209,7 @@ Optional:
 - **Session Management**: Create new sessions or continue existing ones
 - **Real-time Streaming**: Watch responses stream in real-time with visual indicators
 - **Event Visualization**: See tool calls, memory updates, and thinking processes
-- **Session Persistence**: Conversations automatically saved to `~/.genie-cli/sessions/`
+- **Session Persistence**: Conversations automatically saved to `~/.automagik-cli/sessions/`
 
 ## API Integration
 
@@ -340,8 +352,8 @@ pnpm run build
    ```
    Error: Cannot write to session directory
    ```
-   - **Permissions**: Ensure write access to `~/.genie-cli/sessions/`
-   - **Directory**: Create manually if needed: `mkdir -p ~/.genie-cli/sessions`
+   - **Permissions**: Ensure write access to `~/.automagik-cli/sessions/`
+   - **Directory**: Create manually if needed: `mkdir -p ~/.automagik-cli/sessions`
    - **Configuration**: Set custom path with `SESSION_DIR` in `.env`
 
 ### Debug Mode
@@ -358,7 +370,7 @@ CLI_DEBUG=true pnpm run dev
 
 ## Session Management
 
-Sessions are automatically saved to `~/.genie-cli/sessions/` as JSON files:
+Sessions are automatically saved to `~/.automagik-cli/sessions/` as JSON files:
 
 ```json
 {

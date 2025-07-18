@@ -13,4 +13,4 @@ echo "Press Ctrl+C to exit when you see the streaming working."
 echo ""
 
 # Start CLI with timeout for testing
-timeout 30s ./bundle/genie-cli.js || echo "Test completed (timeout or exit)"
+timeout 30s ./bundle/automagik-cli.js || echo "Test completed (timeout or exit)"

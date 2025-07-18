@@ -1,5 +1,5 @@
 /**
- * Exact copy of gemini-cli InputPrompt adapted for Genie backend
+ * Exact copy of gemini-cli InputPrompt adapted for Automagik backend
  */
 
 import React, { useCallback, useEffect, useState } from 'react';

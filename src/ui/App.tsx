@@ -1,5 +1,5 @@
 /**
- * Exact copy of gemini-cli App.tsx but adapted for Genie backend
+ * Exact copy of gemini-cli App.tsx but adapted for Automagik backend
  */
 
 import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
@@ -320,7 +320,7 @@ const App = ({ version }: AppProps) => {
             sessionList += '\n💡 **Tips:**\n';
             sessionList += '- Select a target (agent/team/workflow) to see available sessions\n';
             sessionList += '- Use session selection dialog to continue existing sessions\n';
-            sessionList += '- Local sessions are stored in ~/.genie-cli/sessions/\n';
+            sessionList += '- Local sessions are stored in ~/.automagik-cli/sessions/\n';
             
             addMessage({
               type: MessageType.INFO,

@@ -188,11 +188,11 @@ export const useLocalAPIStream = (
         let actionableAdvice = '';
         
         if (error.message.includes('ECONNREFUSED') || error.message.includes('connect')) {
-          userFriendlyMessage = '🔌 Cannot connect to Genie API server';
+          userFriendlyMessage = '🔌 Cannot connect to Automagik API server';
           actionableAdvice = `
 💡 **Quick Fix:**
    • Check if the API server is running: \`curl ${appConfig.apiBaseUrl}/api/v1/health\`
-   • Start the server: \`cd /path/to/genie-agents && make dev\`
+   • Start the server: \`cd /path/to/automagik-agents && make dev\`
    • Or change API_BASE_URL in .env to correct server address
 
 🔧 **Troubleshooting:**
@@ -331,11 +331,11 @@ export const useLocalAPIStream = (
       let actionableAdvice = '';
       
       if (errorObj.message.includes('ECONNREFUSED') || errorObj.message.includes('connect')) {
-        userFriendlyMessage = '🔌 Cannot connect to Genie API server';
+        userFriendlyMessage = '🔌 Cannot connect to Automagik API server';
         actionableAdvice = `
 💡 **Quick Fix:**
    • Check if the API server is running: \`curl ${appConfig.apiBaseUrl}/api/v1/health\`
-   • Start the server: \`cd /path/to/genie-agents && make dev\`
+   • Start the server: \`cd /path/to/automagik-agents && make dev\`
    • Or change API_BASE_URL in .env to correct server address
 
 🔧 **Troubleshooting:**

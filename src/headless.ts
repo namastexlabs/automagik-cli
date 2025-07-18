@@ -25,7 +25,7 @@ export async function runHeadless(options: HeadlessOptions): Promise<HeadlessRes
     if (!healthResponse.data) {
       return {
         success: false,
-        error: `Cannot connect to API at ${appConfig.apiBaseUrl}. Please start the server with: cd /path/to/genie-agents && make dev`
+        error: `Cannot connect to API at ${appConfig.apiBaseUrl}. Please start the server with: cd /path/to/automagik-agents && make dev`
       };
     }
 

@@ -1,11 +1,11 @@
 {
-  "name": "genie-cli",
+  "name": "automagik-cli",
   "version": "0.1.0",
-  "description": "Genie CLI - A powerful command-line interface for interacting with multi-agent AI systems",
+  "description": "Automagik CLI - A powerful command-line interface for interacting with multi-agent AI systems",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "genie-cli": "bundle/genie-cli.js"
+    "automagik-cli": "bundle/automagik-cli.js"
   },
   "scripts": {
     "start": "node scripts/start.js",
@@ -15,11 +15,14 @@
     "clean": "rimraf dist bundle",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prepublishOnly": "pnpm run clean && pnpm run build && pnpm run bundle",
+    "publish:npm": "pnpm publish --access public"
   },
   "files": [
     "bundle/",
-    "README.md"
+    "README.md",
+    "dist/"
   ],
   "dependencies": {
     "ansi-escapes": "^7.0.0",
@@ -65,24 +68,28 @@
   "engines": {
     "node": ">=20"
   },
+  "preferGlobal": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/namastexlabs/genie-cli.git"
+    "url": "https://github.com/namastexlabs/automagik-cli.git"
   },
   "bugs": {
-    "url": "https://github.com/namastexlabs/genie-cli/issues"
+    "url": "https://github.com/namastexlabs/automagik-cli/issues"
   },
-  "homepage": "https://github.com/namastexlabs/genie-cli#readme",
+  "homepage": "https://github.com/namastexlabs/automagik-cli#readme",
   "keywords": [
     "cli",
     "ai",
     "multi-agent",
-    "genie",
+    "automagik",
     "chat",
     "terminal",
     "typescript"
   ],
   "author": "Namastex Labs",
   "license": "MIT",
-  "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184"
+  "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184",
+  "publishConfig": {
+    "access": "public"
+  }
 }

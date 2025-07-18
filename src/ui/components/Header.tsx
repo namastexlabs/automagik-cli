@@ -8,7 +8,7 @@ import React from 'react';
 import { Box, Text } from 'ink';
 import Gradient from 'ink-gradient';
 import { Colors } from '../colors.js';
-import { shortGenieAsciiLogo, longGenieAsciiLogo } from './AsciiArt.js';
+import { shortAutomagikAsciiLogo, longAutomagikAsciiLogo } from './AsciiArt.js';
 import { getAsciiArtWidth } from '../utils/textUtils.js';
 import { useResponsiveLayout, useResponsiveText } from '../hooks/useResponsiveLayout.js';
 
@@ -29,16 +29,16 @@ export const Header: React.FC<HeaderProps> = ({
   
   let displayTitle;
   let displayVersion = version;
-  const widthOfLongLogo = getAsciiArtWidth(longGenieAsciiLogo);
+  const widthOfLongLogo = getAsciiArtWidth(longAutomagikAsciiLogo);
 
   if (customAsciiArt) {
     displayTitle = customAsciiArt;
   } else {
     // Enhanced responsive logo selection
     if (layout.isSmall || terminalWidth < widthOfLongLogo) {
-      displayTitle = shortGenieAsciiLogo;
+      displayTitle = shortAutomagikAsciiLogo;
     } else {
-      displayTitle = longGenieAsciiLogo;
+      displayTitle = longAutomagikAsciiLogo;
     }
   }
 

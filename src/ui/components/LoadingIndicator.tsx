@@ -1,5 +1,5 @@
 /**
- * Loading indicator adapted from gemini-cli for genie context
+ * Loading indicator adapted from gemini-cli for automagik context
  */
 
 import React from 'react';
@@ -47,7 +47,7 @@ export const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({
     
     switch (streamingState) {
       case StreamingState.Connecting:
-        return '🔗 Connecting to genie...';
+        return '🔗 Connecting to automagik...';
       case StreamingState.Waiting:
         return '⏳ Waiting for response...';
       case StreamingState.Responding:

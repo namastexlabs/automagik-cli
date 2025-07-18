@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "genie-memory": {
+    "automagik-memory": {
       "type": "sse",
       "url": "http://localhost:8765/mcp/openmemory/sse/namastex"
     },

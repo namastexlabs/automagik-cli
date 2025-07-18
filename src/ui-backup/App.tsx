@@ -352,7 +352,7 @@ const App = ({ version }: AppProps) => {
           marginY={1}
         >
           <Box flexDirection="column">
-            <Text bold>Genie Local CLI Help</Text>
+            <Text bold>Automagik Local CLI Help</Text>
             <Text>• Type messages to chat with the selected agent/team/workflow</Text>
             <Text>• Ctrl+H: Toggle this help</Text>
             <Text>• Ctrl+L: Clear screen</Text>

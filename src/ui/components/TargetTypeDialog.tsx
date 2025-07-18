@@ -46,7 +46,7 @@ export function TargetTypeDialog({
       padding={1}
       width="100%"
     >
-      <Text bold color={Colors.AccentPurple}>🎯 Welcome to Genie Local CLI</Text>
+      <Text bold color={Colors.AccentPurple}>🎯 Welcome to Automagik Local CLI</Text>
       <Box marginTop={1}>
         <Text color={Colors.Foreground}>What would you like to interact with?</Text>
       </Box>

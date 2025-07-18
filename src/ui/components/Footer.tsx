@@ -1,5 +1,5 @@
 /**
- * Footer component adapted from gemini-cli for genie context
+ * Footer component adapted from gemini-cli for automagik context
  */
 
 import React from 'react';
@@ -58,7 +58,7 @@ export const Footer: React.FC<FooterProps> = ({
   // Responsive target name
   const targetDisplayText = selectedTarget ? 
     `🎯 ${selectedTarget.name} (${selectedTarget.type})` : 
-    '🎯 genie-local-cli';
+    '🎯 automagik-local-cli';
   const displayTargetText = useResponsiveText(targetDisplayText, middleSectionWidth);
 
   // Responsive API/model display
@@ -147,7 +147,7 @@ export const Footer: React.FC<FooterProps> = ({
         )}
       </Box>
 
-      {/* Middle Section: Genie Target Info - hide on small screens */}
+      {/* Middle Section: Automagik Target Info - hide on small screens */}
       {!layout.isSmall && (
         <Box
           flexGrow={1}

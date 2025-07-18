@@ -1,5 +1,5 @@
 /**
- * History item display component adapted from gemini-cli for genie context
+ * History item display component adapted from gemini-cli for automagik context
  */
 
 import React from 'react';
@@ -469,7 +469,7 @@ export const HistoryItemDisplay: React.FC<HistoryItemDisplayProps> = ({
           <Text color={getMessageColor(item.type)} bold>
             {getMessagePrefix(item.type)}
             {item.type === MessageType.USER ? 'You' : 
-             item.type === MessageType.ASSISTANT ? (item.metadata?.target?.name || item.metadata?.target?.id || 'Genie') :
+             item.type === MessageType.ASSISTANT ? (item.metadata?.target?.name || item.metadata?.target?.id || 'Automagik') :
              item.type.charAt(0).toUpperCase() + item.type.slice(1).replace('_', ' ')}
           </Text>
           {isPending && (

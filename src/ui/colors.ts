@@ -6,7 +6,7 @@
 
 /**
  * Color system adapted from gemini-cli
- * Provides consistent theming support for genie-local-cli
+ * Provides consistent theming support for automagik-local-cli
  */
 
 import { themeManager } from './themes/theme-manager.js';

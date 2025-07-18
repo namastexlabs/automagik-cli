@@ -1,6 +1,6 @@
 /**
  * Gemini-style InputPrompt component that uses the visual design from gemini-cli
- * but connects to genie's backend functionality
+ * but connects to automagik's backend functionality
  */
 
 import React, { useCallback } from 'react';

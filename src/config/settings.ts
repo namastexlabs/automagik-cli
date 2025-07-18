@@ -52,12 +52,12 @@ export const appConfig: AppConfig = {
   apiRetryAttempts: getEnvNumber('API_RETRY_ATTEMPTS', 3),
   
   // CLI Configuration
-  cliName: getEnvString('CLI_NAME', 'genie-cli'),
+  cliName: getEnvString('CLI_NAME', 'automagik-cli'),
   cliVersion: getEnvString('CLI_VERSION', '0.1.0'),
   cliDebug: getEnvBoolean('CLI_DEBUG', false),
   
   // Session Configuration
-  sessionDir: getEnvString('SESSION_DIR', '~/.genie-cli/sessions'),
+  sessionDir: getEnvString('SESSION_DIR', '~/.automagik-cli/sessions'),
   sessionMaxHistory: getEnvNumber('SESSION_MAX_HISTORY', 100),
   sessionAutoSave: getEnvBoolean('SESSION_AUTO_SAVE', true),
   

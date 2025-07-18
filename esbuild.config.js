@@ -12,7 +12,7 @@ async function buildBundle() {
     await build({
       entryPoints: [resolve(__dirname, 'src/index.ts')],
       bundle: true,
-      outfile: resolve(__dirname, 'bundle/genie-cli.js'),
+      outfile: resolve(__dirname, 'bundle/automagik-cli.js'),
       platform: 'node',
       target: 'node20',
       format: 'esm',

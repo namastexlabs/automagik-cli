@@ -45,7 +45,7 @@ export function TargetTypeDialog({
       padding={1}
       width="100%"
     >
-      <Text bold>🧞 Welcome to Genie Local CLI</Text>
+      <Text bold>🧞 Welcome to Automagik Local CLI</Text>
       <Box marginTop={1}>
         <Text>What would you like to interact with?</Text>
       </Box>
