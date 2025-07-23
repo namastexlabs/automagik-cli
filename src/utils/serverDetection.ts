@@ -96,8 +96,8 @@ Look for: "Sistema operacional" message
 
 🔧 **Alternative methods:**
 • Quick health check: \`curl ${serverStatus.url}/api/v1/health\`
-• Check if port is in use: \`lsof -i :9888\`
-• Update server URL in .env: \`API_BASE_URL=http://localhost:9888\`
+• Check if port is in use: \`lsof -i :8886\`
+• Update server URL in .env: \`API_BASE_URL=http://localhost:8886\`
 
 ❌ **Error details:** ${serverStatus.error}`;
 

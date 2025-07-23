@@ -1,7 +1,7 @@
 {
   "name": "automagik-cli",
   "version": "0.1.4",
-  "description": "Automagik CLI - A powerful command-line interface for interacting with multi-agent AI systems",
+  "description": "Automagik CLI - A powerful command-line interface for interacting with Automagik Hive multi-agent AI systems",
   "type": "module",
   "main": "dist/index.js",
   "bin": {

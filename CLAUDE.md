@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Automagik CLI is a sophisticated TypeScript-based command-line interface for interacting with multi-agent AI systems. It provides both interactive terminal UI and headless execution modes for seamless integration with AI agents, teams, and workflows.
+Automagik CLI is a sophisticated TypeScript-based command-line interface for interacting with [Automagik Hive](https://github.com/namastexlabs/automagik-hive) multi-agent AI systems. It provides both interactive terminal UI and headless execution modes for seamless integration with Automagik Hive agents, teams, and workflows.
 
 ## Architecture
 
@@ -50,7 +50,7 @@ src/
 Environment-based configuration via `.env` files:
 ```bash
 # All settings are optional with sensible defaults
-API_BASE_URL=http://localhost:9888    # API server location
+API_BASE_URL=http://localhost:8886    # API server location
 API_TIMEOUT=10000                     # 10 second timeout
 SESSION_DIR=~/.automagik-cli/sessions     # Session storage location
 CLI_DEBUG=false                       # Debug logging

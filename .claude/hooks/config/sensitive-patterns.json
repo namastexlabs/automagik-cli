@@ -139,7 +139,7 @@
       "DEMO_MODE=true",
       "ENVIRONMENT=development",
       "PB_AGENTS_HOST=0.0.0.0",
-      "PB_AGENTS_PORT=9888"
+      "PB_AGENTS_PORT=8886"
     ]
   }
 }

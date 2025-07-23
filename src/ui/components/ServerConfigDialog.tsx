@@ -10,7 +10,7 @@ interface ServerConfigDialogProps {
 }
 
 export const ServerConfigDialog: React.FC<ServerConfigDialogProps> = ({
-  currentUrl = 'http://localhost:9888',
+  currentUrl = 'http://localhost:8886',
   onSubmit,
   onCancel,
 }) => {
@@ -59,7 +59,7 @@ export const ServerConfigDialog: React.FC<ServerConfigDialogProps> = ({
       
       <Box marginBottom={1}>
         <Text color={Colors.Comment}>
-          Examples: http://localhost:9888, https://api.example.com, 192.168.1.100:8080
+          Examples: http://localhost:8886, https://api.example.com, 192.168.1.100:8080
         </Text>
       </Box>
       

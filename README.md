@@ -1,13 +1,13 @@
 # Automagik CLI
 
-A powerful TypeScript-based CLI chat application for interacting with multi-agent AI systems. Built with React and designed for seamless integration with local and remote APIs.
+A powerful TypeScript-based CLI chat application for interacting with [Automagik Hive](https://github.com/namastexlabs/automagik-hive) multi-agent AI systems. Built with React and designed for seamless integration with Automagik Hive instances.
 
 ## Quick Start
 
 ```bash
 # 1. Prerequisites
 npm install -g pnpm    # Install pnpm package manager
-# Ensure Node.js >= 20 and API server running at localhost:9888
+# Ensure Node.js >= 20 and API server running at localhost:8886
 
 # 2. Installation
 git clone https://github.com/namastexlabs/automagik-cli.git
@@ -35,7 +35,7 @@ pnpm run build
 
 - Node.js >= 20
 - pnpm >= 10.12.4 (package manager - install with `npm install -g pnpm`)
-- Local multi-agent API server running (default: http://localhost:9888)
+- [Automagik Hive](https://github.com/namastexlabs/automagik-hive) instance running (default: http://localhost:8886)
 
 ## Installation
 
@@ -72,7 +72,7 @@ All configuration is done via environment variables in the `.env` file. Note tha
 
 ```bash
 # API Server Configuration
-API_BASE_URL=http://localhost:9888
+API_BASE_URL=http://localhost:8886
 API_TIMEOUT=30000
 API_RETRY_ATTEMPTS=3
 
@@ -315,9 +315,9 @@ pnpm run build
    ```
    Error: Cannot connect to API server
    ```
-   - **Check API server**: Ensure server is running at `http://localhost:9888` (or your configured URL)
+   - **Check API server**: Ensure server is running at `http://localhost:8886` (or your configured URL)
    - **Verify endpoints**: API server must provide `/api/v1/health` and `/playground/*` endpoints
-   - **Network connectivity**: Test with `curl http://localhost:9888/api/v1/health`
+   - **Network connectivity**: Test with `curl http://localhost:8886/api/v1/health`
    - **Configuration**: Verify `API_BASE_URL` in `.env` file
 
 2. **Package Manager Errors**

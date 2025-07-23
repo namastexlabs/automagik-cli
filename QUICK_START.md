@@ -10,7 +10,7 @@ cp .env.example .env
 ```
 
 ### 2. Start Your API Server
-Make sure your multi-agent API is running at `http://localhost:9888`
+Make sure your Automagik Hive instance is running at `http://localhost:8886`
 
 ### 3. Run the CLI
 ```bash
@@ -33,7 +33,7 @@ npm run build
 
 Edit `.env` to change settings:
 ```bash
-API_BASE_URL=http://localhost:9888  # Your API server
+API_BASE_URL=http://localhost:8886  # Your Automagik Hive instance
 CLI_DEBUG=true                      # Enable debug mode
 SESSION_DIR=~/.automagik-cli/sessions   # Session storage
 ```
