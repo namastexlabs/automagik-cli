@@ -286,7 +286,7 @@ const App = ({ version }: AppProps) => {
         }, 1000);
       }
     }
-  }, [uiState]);
+  }, []);
 
   useEffect(() => {
     initializeAPIConnection(currentServerUrl);
