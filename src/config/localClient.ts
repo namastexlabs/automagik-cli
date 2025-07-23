@@ -55,6 +55,18 @@ export class LocalAPIClient {
     this.retryAttempts = appConfig.apiRetryAttempts;
   }
 
+  private getDefaultHeaders(): Record<string, string> {
+    const headers: Record<string, string> = {
+      'accept': 'application/json',
+    };
+    
+    if (appConfig.apiKey) {
+      headers['x-api-key'] = appConfig.apiKey;
+    }
+    
+    return headers;
+  }
+
   // Update base URL for server configuration
   setBaseUrl(url: string): void {
     this.baseUrl = url;
@@ -70,6 +82,10 @@ export class LocalAPIClient {
       const response: GaxiosResponse<T> = await gaxiosRequest({
         url,
         timeout: this.timeout,
+        headers: {
+          ...this.getDefaultHeaders(),
+          ...(options.headers || {}),
+        },
         ...options,
       });
 
@@ -227,6 +243,7 @@ export class LocalAPIClient {
         url,
         method: 'POST',
         data: formData,
+        headers: this.getDefaultHeaders(),
         responseType: 'stream',
         timeout: 0, // No timeout for streaming requests
         signal: abortSignal,
@@ -580,6 +597,7 @@ export class LocalAPIClient {
         url,
         method: 'POST',
         data: formData,
+        headers: this.getDefaultHeaders(),
         responseType: 'stream',
         timeout: 0, // No timeout for streaming requests
         signal: abortSignal,
@@ -895,6 +913,11 @@ export class LocalAPIClient {
     return this.makeRequest('/api/v1/health', {
       method: 'GET',
     });
+  }
+
+  // Generic API call method for custom endpoints
+  async apiCall<T = any>(endpoint: string, options: Partial<GaxiosOptions> = {}): Promise<LocalAPIResponse<T>> {
+    return this.makeRequest<T>(endpoint, options);
   }
 }
 

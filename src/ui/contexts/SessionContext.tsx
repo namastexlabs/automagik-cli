@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { HistoryItem, SessionData, TargetInfo } from '../types.js';
 import { appConfig } from '../../config/settings.js';
+import { localAPIClient } from '../../config/localClient.js';
 import { resolve } from 'path';
 import { writeFile, readFile, mkdir } from 'fs/promises';
 import { existsSync } from 'fs';
@@ -186,16 +187,14 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({ children }) =>
 
   const listBackendSessions = useCallback(async (target: TargetInfo): Promise<any[]> => {
     try {
-      const baseUrl = appConfig.apiBaseUrl || 'http://localhost:9888';
-      const endpoint = `${baseUrl}/playground/${target.type}s/${target.id}/sessions`;
+      const endpoint = `/playground/${target.type}s/${target.id}/sessions`;
+      const response = await localAPIClient.apiCall(endpoint, { method: 'GET' });
       
-      const response = await fetch(endpoint);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch sessions: ${response.statusText}`);
+      if (response.error) {
+        throw new Error(`Failed to fetch sessions: ${response.error}`);
       }
       
-      const sessions = await response.json();
-      return Array.isArray(sessions) ? sessions : [];
+      return Array.isArray(response.data) ? response.data : [];
     } catch (error) {
       console.error('Failed to list backend sessions:', error);
       return [];

@@ -4,6 +4,7 @@ import { homedir } from 'os';
 
 export interface EnvConfig {
   API_BASE_URL?: string;
+  API_KEY?: string;
   API_TIMEOUT?: string;
   API_RETRY_ATTEMPTS?: string;
   CLI_DEBUG?: string;
@@ -51,6 +52,7 @@ export class EnvManager {
     const lines = [
       '# API Server Configuration',
       `API_BASE_URL=${config.API_BASE_URL || ''}`,
+      `API_KEY=${config.API_KEY || ''}`,
       `API_TIMEOUT=${config.API_TIMEOUT || '30000'}`,
       `API_RETRY_ATTEMPTS=${config.API_RETRY_ATTEMPTS || '3'}`,
       '',

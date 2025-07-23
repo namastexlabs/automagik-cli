@@ -1,30 +1,69 @@
 import { request as gaxiosRequest } from 'gaxios';
+import { appConfig } from '../config/settings.js';
 
 export interface ServerStatus {
   isRunning: boolean;
   url: string;
   health?: any;
   error?: string;
+  isAuthenticated?: boolean;
+  authError?: string;
 }
 
 export async function detectAPIServer(baseUrl: string): Promise<ServerStatus> {
   try {
-    const response = await gaxiosRequest({
+    // First, check if server is running without authentication
+    const healthResponse = await gaxiosRequest({
       url: `${baseUrl}/api/v1/health`,
       method: 'GET',
       timeout: 3000,
     });
 
-    return {
-      isRunning: true,
-      url: baseUrl,
-      health: response.data,
-    };
+    // Server is running, now check if we can authenticate
+    if (appConfig.apiKey) {
+      try {
+        // Test API key with a simple authenticated endpoint
+        const authResponse = await gaxiosRequest({
+          url: `${baseUrl}/playground/agents`,
+          method: 'GET',
+          timeout: 3000,
+          headers: {
+            'accept': 'application/json',
+            'x-api-key': appConfig.apiKey,
+          },
+        });
+
+        return {
+          isRunning: true,
+          url: baseUrl,
+          health: healthResponse.data,
+          isAuthenticated: true,
+        };
+      } catch (authError) {
+        return {
+          isRunning: true,
+          url: baseUrl,
+          health: healthResponse.data,
+          isAuthenticated: false,
+          authError: authError instanceof Error ? authError.message : 'Authentication failed',
+        };
+      }
+    } else {
+      // No API key configured
+      return {
+        isRunning: true,
+        url: baseUrl,
+        health: healthResponse.data,
+        isAuthenticated: false,
+        authError: 'No API key configured',
+      };
+    }
   } catch (error) {
     return {
       isRunning: false,
       url: baseUrl,
       error: error instanceof Error ? error.message : 'Unknown error',
+      isAuthenticated: false,
     };
   }
 }

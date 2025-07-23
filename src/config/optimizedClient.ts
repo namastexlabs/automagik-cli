@@ -40,6 +40,18 @@ export class OptimizedAPIClient {
     this.baseUrl = appConfig.apiBaseUrl;
   }
 
+  private getDefaultHeaders(): Record<string, string> {
+    const headers: Record<string, string> = {
+      'accept': 'application/json',
+    };
+    
+    if (appConfig.apiKey) {
+      headers['x-api-key'] = appConfig.apiKey;
+    }
+    
+    return headers;
+  }
+
   private createStreamParser() {
     let buffer = '';
     let stats: RunStats = {
@@ -158,6 +170,7 @@ export class OptimizedAPIClient {
         url,
         method: 'POST',
         data: formData,
+        headers: this.getDefaultHeaders(),
         responseType: 'stream',
         timeout: 0,
         signal: abortSignal,
@@ -271,6 +284,7 @@ export class OptimizedAPIClient {
         url,
         method: 'POST',
         data: formData,
+        headers: this.getDefaultHeaders(),
         responseType: 'stream',
         timeout: 0,
         signal: abortSignal,
@@ -354,6 +368,7 @@ export class OptimizedAPIClient {
     const response = await gaxiosRequest({
       url,
       method: 'GET',
+      headers: this.getDefaultHeaders(),
       timeout: 5000, // Reduced timeout
     });
     return { data: response.data as any };
@@ -364,6 +379,7 @@ export class OptimizedAPIClient {
     const response = await gaxiosRequest({
       url,
       method: 'GET',
+      headers: this.getDefaultHeaders(),
       timeout: 5000,
     });
     return { data: response.data as any };
@@ -374,6 +390,7 @@ export class OptimizedAPIClient {
     const response = await gaxiosRequest({
       url,
       method: 'GET',
+      headers: this.getDefaultHeaders(),
       timeout: 5000,
     });
     return { data: response.data as any };
@@ -384,6 +401,7 @@ export class OptimizedAPIClient {
     const response = await gaxiosRequest({
       url,
       method: 'GET',
+      headers: this.getDefaultHeaders(),
       timeout: 2000,
     });
     return { data: response.data as any };

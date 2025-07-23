@@ -34,6 +34,18 @@ export class StreamingAPIClient {
     this.baseUrl = appConfig.apiBaseUrl;
   }
 
+  private getDefaultHeaders(): Record<string, string> {
+    const headers: Record<string, string> = {
+      'accept': 'application/json',
+    };
+    
+    if (appConfig.apiKey) {
+      headers['x-api-key'] = appConfig.apiKey;
+    }
+    
+    return headers;
+  }
+
   private createRawCollector(): { stats: RunStats; collectChunk: (chunk: string) => void; parseAll: () => any[]; getAllEvents: (buffer: string) => any[] } {
     let rawBuffer = '';
     const stats: RunStats = {
@@ -108,6 +120,7 @@ export class StreamingAPIClient {
         url,
         method: 'POST',
         data: formData,
+        headers: this.getDefaultHeaders(),
         responseType: 'stream',
         timeout: 0,
         signal: abortSignal,
@@ -206,6 +219,7 @@ export class StreamingAPIClient {
         url,
         method: 'POST',
         data: formData,
+        headers: this.getDefaultHeaders(),
         responseType: 'stream',
         timeout: 0,
         signal: abortSignal,
@@ -289,6 +303,7 @@ export class StreamingAPIClient {
     const response = await gaxiosRequest({
       url,
       method: 'GET',
+      headers: this.getDefaultHeaders(),
       timeout: 5000,
     });
     return { data: response.data as any };
@@ -299,6 +314,7 @@ export class StreamingAPIClient {
     const response = await gaxiosRequest({
       url,
       method: 'GET',
+      headers: this.getDefaultHeaders(),
       timeout: 5000,
     });
     return { data: response.data as any };
@@ -309,6 +325,7 @@ export class StreamingAPIClient {
     const response = await gaxiosRequest({
       url,
       method: 'GET',
+      headers: this.getDefaultHeaders(),
       timeout: 5000,
     });
     return { data: response.data as any };
@@ -319,6 +336,7 @@ export class StreamingAPIClient {
     const response = await gaxiosRequest({
       url,
       method: 'GET',
+      headers: this.getDefaultHeaders(),
       timeout: 2000,
     });
     return { data: response.data as any };

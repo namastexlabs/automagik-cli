@@ -31,11 +31,12 @@ import { SessionSelectionDialog } from './components/SessionSelectionDialog.js';
 import { useTextBuffer } from './components/shared/text-buffer.js';
 import { SessionProvider, useSession } from './contexts/SessionContext.js';
 import { StreamingProvider } from './contexts/StreamingContext.js';
-import { appConfig } from '../config/settings.js';
+import { appConfig, reloadAppConfig } from '../config/settings.js';
 import { localAPIClient } from '../config/localClient.js';
 import { detectAPIServer, generateStartupGuide } from '../utils/serverDetection.js';
 import { envManager } from '../utils/envManager.js';
 import { ServerConfigDialog } from './components/ServerConfigDialog.js';
+import { APIKeyConfigDialog } from './components/APIKeyConfigDialog.js';
 import { ConnectionStatus } from './components/ConnectionStatus.js';
 import ansiEscapes from 'ansi-escapes';
 
@@ -87,7 +88,7 @@ const App = ({ version }: AppProps) => {
   const [shellModeActive, setShellModeActive] = useState<boolean>(false);
   
   // Target selection state
-  const [uiState, setUiState] = useState<'configuring_server' | 'selecting_type' | 'selecting_target' | 'selecting_session' | 'chatting'>('selecting_type');
+  const [uiState, setUiState] = useState<'configuring_server' | 'configuring_api_key' | 'selecting_type' | 'selecting_target' | 'selecting_session' | 'chatting'>('selecting_type');
   const [selectedTargetType, setSelectedTargetType] = useState<'agent' | 'team' | 'workflow' | null>(null);
   
   // API state
@@ -96,6 +97,7 @@ const App = ({ version }: AppProps) => {
   const [connectionError, setConnectionError] = useState<string>('');
   const [retryCount, setRetryCount] = useState(0);
   const [currentServerUrl, setCurrentServerUrl] = useState(appConfig.apiBaseUrl);
+  const [authenticationError, setAuthenticationError] = useState<string>('');
   const [selectedTarget, setSelectedTarget] = useState<{ type: 'agent' | 'team' | 'workflow'; id: string; name: string } | null>(null);
   const [availableTargets, setAvailableTargets] = useState<{
     agents: any[];
@@ -171,6 +173,7 @@ const App = ({ version }: AppProps) => {
     process.exit(0);
   }, []);
 
+
   // Local API streaming
   const {
     streamingState,
@@ -220,11 +223,22 @@ const App = ({ version }: AppProps) => {
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
       
-      const healthResponse = await localAPIClient.healthCheck();
-      if (healthResponse.error) {
-        throw new Error(healthResponse.error);
+      // Use the updated detectAPIServer that includes authentication validation
+      const serverStatus = await detectAPIServer(url);
+      
+      if (!serverStatus.isRunning) {
+        throw new Error(serverStatus.error || 'Server is not running');
+      }
+      
+      if (!serverStatus.isAuthenticated) {
+        // Server is running but authentication failed
+        setAuthenticationError(serverStatus.authError || 'Authentication failed');
+        setConnectionStatus('connected'); // Connected to server but not authenticated
+        setUiState('configuring_api_key');
+        return;
       }
 
+      // Server is running and authenticated, now fetch data
       const [agentsResponse, teamsResponse, workflowsResponse] = await Promise.all([
         localAPIClient.listAgents(),
         localAPIClient.listTeams(),
@@ -239,7 +253,11 @@ const App = ({ version }: AppProps) => {
 
       setConnectionStatus('connected');
       setConnectionError('');
+      setAuthenticationError('');
       setRetryCount(0);
+      
+      // Reset UI state to normal flow after successful connection
+      setUiState('selecting_type');
       
       // Auto-select first agent for direct interface
       if (agentsResponse.data && agentsResponse.data.length > 0) {
@@ -268,11 +286,37 @@ const App = ({ version }: AppProps) => {
         }, 1000);
       }
     }
-  }, []);
+  }, [uiState]);
 
   useEffect(() => {
     initializeAPIConnection(currentServerUrl);
   }, [initializeAPIConnection, currentServerUrl]);
+
+  // API key configuration handlers
+  const handleAPIKeyConfigSubmit = useCallback(async (apiKey: string) => {
+    try {
+      // Update .env file with new API key
+      await envManager.updateEnvFile({ API_KEY: apiKey });
+      
+      // Reload the app configuration to pick up the new API key
+      reloadAppConfig();
+      
+      // Update the local API client configuration (force reload)
+      localAPIClient.setBaseUrl(currentServerUrl);
+      
+      // Clear authentication error before retrying
+      setAuthenticationError('');
+      
+      // Reload appConfig by restarting the connection process
+      await initializeAPIConnection(currentServerUrl);
+    } catch (error) {
+      setAuthenticationError(`Failed to save API key: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }, [currentServerUrl, initializeAPIConnection]);
+
+  const handleAPIKeyConfigCancel = useCallback(() => {
+    process.exit(0);
+  }, []);
 
   const handleExit = useCallback(
     (
@@ -435,8 +479,8 @@ const App = ({ version }: AppProps) => {
     );
   }
 
-  // Show connection status during startup or server configuration
-  if (connectionStatus === 'connecting' || connectionStatus === 'failed' || uiState === 'configuring_server') {
+  // Show connection status during startup, server configuration, or API key configuration
+  if (connectionStatus === 'connecting' || connectionStatus === 'failed' || uiState === 'configuring_server' || uiState === 'configuring_api_key') {
     return (
       <Box flexDirection="column" marginBottom={1} width={layout.maxContentWidth}>
         <Static
@@ -464,6 +508,14 @@ const App = ({ version }: AppProps) => {
             currentUrl={currentServerUrl}
             onSubmit={handleServerConfigSubmit}
             onCancel={handleServerConfigCancel}
+          />
+        )}
+        {uiState === 'configuring_api_key' && (
+          <APIKeyConfigDialog
+            currentApiKey={appConfig.apiKey}
+            authError={authenticationError}
+            onSubmit={handleAPIKeyConfigSubmit}
+            onCancel={handleAPIKeyConfigCancel}
           />
         )}
       </Box>
